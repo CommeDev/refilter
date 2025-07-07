@@ -1,69 +1,81 @@
-# :package_description
+# filter-and-reindex
 
-[![Latest Version on Packagist](https://img.shields.io/packagist/v/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3Arun-tests+branch%3Amain)
-[![GitHub Code Style Action Status](https://img.shields.io/github/actions/workflow/status/:vendor_slug/:package_slug/fix-php-code-style-issues.yml?branch=main&label=code%20style&style=flat-square)](https://github.com/:vendor_slug/:package_slug/actions?query=workflow%3A"Fix+PHP+code+style+issues"+branch%3Amain)
-[![Total Downloads](https://img.shields.io/packagist/dt/:vendor_slug/:package_slug.svg?style=flat-square)](https://packagist.org/packages/:vendor_slug/:package_slug)
-<!--delete-->
----
-This repo can be used to scaffold a Laravel package. Follow these steps to get started:
+A minimal yet expressive PHP utility function that filters an array and reindexes the result.  
+Originally proposed in [laravel/framework#56182](https://github.com/laravel/framework/pull/56182).
 
-1. Press the "Use this template" button at the top of this repo to create a new repo with the contents of this skeleton.
-2. Run "php ./configure.php" to run a script that will replace all placeholders throughout all the files.
-3. Have fun creating your package.
-4. If you need help creating a package, consider picking up our <a href="https://laravelpackage.training">Laravel Package Training</a> video course.
----
-<!--/delete-->
-This is where your description should go. Limit it to a paragraph or two. Consider adding a small example.
+## Why?
 
-## Support us
+In PHP, it's common to filter an array and reset its numeric keys using:
 
-[<img src="https://github-ads.s3.eu-central-1.amazonaws.com/:package_name.jpg?t=1" width="419px" />](https://spatie.be/github-ad-click/:package_name)
+```php
+array_values(array_filter($array));
+```
 
-We invest a lot of resources into creating [best in class open source packages](https://spatie.be/open-source). You can support us by [buying one of our paid products](https://spatie.be/open-source/support-us).
+This helper simplifies the idiom into one clean function:
 
-We highly appreciate you sending us a postcard from your hometown, mentioning which of our package(s) you are using. You'll find our address on [our contact page](https://spatie.be/about-us). We publish all received postcards on [our virtual postcard wall](https://spatie.be/open-source/postcards).
+```php
+filter_and_reindex($array);
+```
+
+### Benefits
+
+- Improves readability in transformation chains
+- Prevents forgetting to reset keys after filtering
+- Encourages functional composition
 
 ## Installation
 
-You can install the package via composer:
-
 ```bash
-composer require :vendor_slug/:package_slug
+composer require your-vendor/filter-and-reindex
 ```
 
-You can publish and run the migrations with:
-
-```bash
-php artisan vendor:publish --tag=":package_slug-migrations"
-php artisan migrate
-```
-
-You can publish the config file with:
-
-```bash
-php artisan vendor:publish --tag=":package_slug-config"
-```
-
-This is the contents of the published config file:
-
-```php
-return [
-];
-```
-
-Optionally, you can publish the views using
-
-```bash
-php artisan vendor:publish --tag=":package_slug-views"
-```
+> Replace `your-vendor` with your actual Composer vendor name.
 
 ## Usage
 
+### Basic usage
+
 ```php
-$variable = new VendorName\Skeleton();
-echo $variable->echoPhrase('Hello, VendorName!');
+use function FilterAndReindex\filter_and_reindex;
+
+$data = ['foo', null, 'bar'];
+
+$result = filter_and_reindex($data);
+
+// ['foo', 'bar']
 ```
+
+### With custom callback
+
+```php
+$data = [1, 2, 3, 4];
+
+$result = filter_and_reindex($data, fn ($v) => $v % 2 === 0);
+
+// [2, 4]
+```
+
+## API
+
+```php
+filter_and_reindex(array $array, ?callable $callback = null): array
+```
+
+| Parameter   | Type              | Description                                              |
+|-------------|-------------------|----------------------------------------------------------|
+| `$array`    | `array`           | The input array                                          |
+| `$callback` | `callable|null`   | Optional filter callback. Defaults to `boolval`          |
+| Returns     | `array`           | The filtered and reindexed array (via `array_values()`)  |
+
+## Comparison with Laravel Collections
+
+Laravel provides a similar transformation via Collections:
+
+```php
+collect($array)->filter()->values()->all();
+```
+
+This package offers a lightweight, framework-agnostic alternative — ideal for utility-layer or package development.
 
 ## Testing
 
@@ -71,23 +83,8 @@ echo $variable->echoPhrase('Hello, VendorName!');
 composer test
 ```
 
-## Changelog
+Or, if PHPUnit is installed:
 
-Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
-
-## Contributing
-
-Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
-
-## Security Vulnerabilities
-
-Please review [our security policy](../../security/policy) on how to report security vulnerabilities.
-
-## Credits
-
-- [:author_name](https://github.com/:author_username)
-- [All Contributors](../../contributors)
-
-## License
-
-The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+```bash
+./vendor/bin/phpunit
+```
