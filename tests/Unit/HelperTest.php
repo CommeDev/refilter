@@ -2,7 +2,6 @@
 
 namespace Zigzagdev\App\Tests\Unit;
 
-use Zigzagdev\App\Facades\App;
 use PHPUnit\Framework\TestCase;
 
 class HelperTest extends TestCase
@@ -29,7 +28,7 @@ class HelperTest extends TestCase
     public function test_filter_and_reindex_with_callback(): void
     {
         $data = [1, 2, 3, 4];
-        $result = \Zigzagdev\Refilter\filterAndReIndex($data, fn($v) => $v % 2 === 0);
+        $result = \Zigzagdev\Refilter\filterAndReIndex($data, fn ($v) => $v % 2 === 0);
 
         $this->assertSame([2, 4], $result);
     }
