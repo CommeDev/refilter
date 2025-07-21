@@ -1,12 +1,12 @@
 <?php
 
-namespace VendorName\Skeleton\Commands;
+namespace Zigzagdev\App\Commands;
 
 use Illuminate\Console\Command;
 
-class SkeletonCommand extends Command
+class AppCommand extends Command
 {
-    public $signature = 'skeleton';
+    public $signature = 'app';
 
     public $description = 'My command';
 
