@@ -43,8 +43,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Zigzagdev\\Refilter\\Tests\\": "tests/",
-            "Workbench\\App\\": "workbench/app/"
+            "Zigzagdev\\App\\Tests\\": "tests/"
         }
     },
     "scripts": {

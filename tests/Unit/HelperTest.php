@@ -1,35 +1,17 @@
 <?php
 
-namespace Zigzagdev\App\Tests\Unit;
+namespace Zigzagdev\App\Tests;
 
-use PHPUnit\Framework\TestCase;
+it('removes null and re index array', function () {
+    $data = ['foo', null, 'bar'];
+    $result = \Zigzagdev\Refilter\filterAndReIndex($data);
 
-class HelperTest extends TestCase
-{
-    protected function setUp(): void
-    {
-        parent::setUp();
-    }
+    expect($result)->toEqual(['foo', 'bar']);
+});
 
-    protected function tearDown(): void
-    {
-        parent::tearDown();
-    }
+it('filters with callback and re index', function () {
+    $data = [1, 2, 3, 4];
+    $result = \Zigzagdev\Refilter\filterAndReIndex($data, fn ($v) => $v % 2 === 0);
 
-    public function test_filter_and_reindex_removes_null_and_reindex(): void
-    {
-        $data = ['foo', null, 'bar'];
-
-        $result = \Zigzagdev\Refilter\filterAndReIndex($data);
-
-        $this->assertSame(['foo', 'bar'], $result);
-    }
-
-    public function test_filter_and_reindex_with_callback(): void
-    {
-        $data = [1, 2, 3, 4];
-        $result = \Zigzagdev\Refilter\filterAndReIndex($data, fn ($v) => $v % 2 === 0);
-
-        $this->assertSame([2, 4], $result);
-    }
-}
+    expect($result)->toEqual([2, 4]);
+});
