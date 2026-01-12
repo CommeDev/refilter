@@ -12,6 +12,7 @@ jobs:
     name: phpstan
     runs-on: ubuntu-latest
     timeout-minutes: 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -23,6 +24,12 @@ jobs:
 
       - name: Install composer dependencies
         uses: ramsey/composer-install@v3
+
+      - name: Validate composer.json
+        run: composer validate
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --no-progress
 
       - name: Run PHPStan
         run: ./vendor/bin/phpstan --error-format=github
